@@ -1,0 +1,6 @@
+
+*.ldf
+*.lpf
+*.sty
+src/main/.build_status
+*.html
