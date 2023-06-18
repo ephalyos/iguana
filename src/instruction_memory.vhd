@@ -3,14 +3,14 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity mp is
+entity instruction_memory is
   port(
     address     : in std_logic_vector(9 downto 0);
     instruction : out std_logic_vector(31 downto 0)
   );
 end entity;
 
-architecture behavior of mp is
+architecture behavior of instruction_memory is
   
   -- carga / almacenamiento
   constant op_load  : std_logic_vector := "00000"; -- 0
@@ -32,10 +32,12 @@ architecture behavior of mp is
   constant op_xnor  : std_logic_vector(4 downto 0) := "01011"; -- 11
   
   -- comparison
-  constant op_greater   : std_logic_vector(4 downto 0) := "01100"; -- 12
-  constant op_less      : std_logic_vector(4 downto 0) := "01101"; -- 13 
-  constant op_equal     : std_logic_vector(4 downto 0) := "01110"; -- 14
-  constant op_not_equal : std_logic_vector(4 downto 0) := "01111"; -- 15
+  constant op_gt : std_logic_vector(4 downto 0) := "01100"; -- 12
+  constant op_eq : std_logic_vector(4 downto 0) := "01101"; -- 13
+  constant op_lt : std_logic_vector(4 downto 0) := "01110"; -- 14
+  constant op_lt : std_logic_vector(4 downto 0) := "01110"; -- 14
+  constant op_lt : std_logic_vector(4 downto 0) := "01110"; -- 14
+  constant op_lt : std_logic_vector(4 downto 0) := "01110"; -- 14
   
   -- jump
   constant op_jump      : std_logic_vector(4 downto 0) := "10001"; -- 17

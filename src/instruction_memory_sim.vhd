@@ -3,7 +3,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-use work.pkg_mp.all;
+use work.instruction_memory_pkg.all;
 
 entity sim_mp is
 end entity;
@@ -15,7 +15,7 @@ signal instruction  : std_logic_vector(31 downto 0);
 
 begin
   
-  memoria_programa : mp
+  memoria_programa : instruction_memory
   port map(
     address     => address,
     instruction => instruction
