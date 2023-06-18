@@ -3,9 +3,9 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-package pkg_md is
+package data_memory_pkg is
   
-  component md is
+  component data_memory is
     port(
       clk   : in std_logic;
       we    : in std_logic;                     -- write enabler

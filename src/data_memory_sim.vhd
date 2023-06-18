@@ -3,7 +3,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-use work.pkg_md.all;
+use work.data_memory_pkg.all;
 
 entity sim_md is
 end entity;
@@ -17,10 +17,9 @@ signal addr : std_logic_vector(9 downto 0);
 signal din  : std_logic_vector(7 downto 0);
 signal dout : std_logic_vector(7 downto 0);
 
-
 begin
   
-  memoria_datos : md
+  memoria_datos : data_memory
   port map(
     clk   => clk,
     we    => we,

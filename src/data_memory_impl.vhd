@@ -3,8 +3,8 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-use work.pkg_osc.all;
-use work.pkg_md.all;
+use work.oscillator_pkg.all;
+use work.data_memory_pkg.all;
 
 entity impl_md is
   port(
@@ -34,7 +34,7 @@ begin
   
   tmp_addr <= "00" & addr;
   
-  memoria_datos : md
+  memoria_datos : data_memory
   port map(
     clk   => tmp_clk,
     we    => we,

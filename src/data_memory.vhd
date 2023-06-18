@@ -3,7 +3,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity md is 
+entity data_memory is 
   port(
     clk   : in std_logic;
     we    : in std_logic;                     -- write enabler
@@ -14,7 +14,7 @@ entity md is
   );
 end entity;
 
-architecture behavior of md is 
+architecture behavior of data_memory is 
 
   -- memory definition
   type m1024x8 is array(0 to 2**10 - 1) of std_logic_vector(7 downto 0);
@@ -35,22 +35,21 @@ architecture behavior of md is
   
 begin
   
-  -- synchronous read
+  -- for simulation - clk'event and clk = '0' 
+  -- for implementation - falling_edge(clk)
+  
   reading : process (clk)
   begin
-    -- for simulation use the clock = '1' condition 
-    if (rising_edge(clk)) then
+    if (clk'event and clk = '1') then
       if (re = '1') then
         dout <= memory(to_integer(unsigned(addr)));
       end if;
     end if;
   end process;
   
-  -- synchronous write
   writing : process (clk)
   begin
-    -- for simulation use the clock = '0' condition 
-    if (falling_edge(clk)) then
+    if (clk'event and clk = '0') then
       if (we = '1') then
         memory(to_integer(unsigned(addr))) <= din;
       end if;
