@@ -1,10 +1,9 @@
 
 library ieee;
 use ieee.std_logic_1164.all;
-use ieee.std_logic_arith.all;
-use ieee.std_logic_unsigned.all;
+use ieee.numeric_std.all;
 
-entity counter is
+entity program_counter is
   port(
     clk     : in std_logic;
     reset   : in std_logic;
@@ -15,7 +14,7 @@ entity counter is
   );
 end entity;
 
-architecture behavior of counter is
+architecture behavior of program_counter is
 
 signal pc_next : std_logic_vector(7 downto 0);
 
@@ -25,18 +24,19 @@ begin
   begin
     if (reset = '1') then
       pc_out <= (others => '0');
-    -- WARNING: remove the <or clk = '0'> condition if implemented
-    elsif (falling_edge(clk)) then
+    -- Simulation - clk'event and clk = '0'
+    -- Implementation - falling_edge(clk)
+    elsif (clk'event and clk = '0') then
       if (wpc = '1') then 
         if (sel = '1') then
           pc_out <= pc_in;
-        else 
+        else
           pc_out <= pc_next;
         end if;
       end if;
     end if;
   end process;
   
-  pc_next <= pc_out + 1;
+  pc_next <= std_logic_vector(unsigned(pc_out) + 1);
   
 end architecture;

@@ -4,7 +4,7 @@ use ieee.std_logic_1164.all;
 use ieee.std_logic_arith.all;
 use ieee.std_logic_unsigned.all;
 
-use work.pkg_counter.all;
+use work.program_counter_pkg.all;
 
 entity sim_counter is
 end entity;
@@ -20,7 +20,7 @@ signal pc_out : std_logic_vector(7 downto 0) := "00000000";
 
 begin
   
-  pc : counter
+  pc : program_counter
   port map(
     clk     => clk,
     reset   => reset,
@@ -38,7 +38,7 @@ begin
     wait for 20 ns;
   end process;
   
-  program_counter : process
+  counter : process
   begin
     
     reset <= '1';

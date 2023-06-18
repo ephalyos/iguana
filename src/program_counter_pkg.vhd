@@ -4,9 +4,9 @@ use ieee.std_logic_1164.all;
 use ieee.std_logic_arith.all;
 use ieee.std_logic_unsigned.all;
 
-package pkg_counter is
+package program_counter_pkg is
   
-  component counter is
+  component program_counter is
     port(
       clk           : in std_logic;
       reset         : in std_logic;

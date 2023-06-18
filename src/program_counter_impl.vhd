@@ -4,8 +4,8 @@ use ieee.std_logic_1164.all;
 use ieee.std_logic_arith.all;
 use ieee.std_logic_unsigned.all;
 
-use work.pkg_osc.all;
-use work.pkg_counter.all;
+use work.oscillator_pkg.all;
+use work.program_counter_pkg.all;
 
 entity impl_counter is
   port(
@@ -25,13 +25,13 @@ signal tmp_clk : std_logic;
 
 begin
   
-  oscillator : osc
+  osc : oscillator
   port map(
     div_factor  => div_factor,
     out_freq    => tmp_clk
   );
   
-  pc : counter
+  pc : program_counter
   port map(
     clk     => tmp_clk,
     reset   => reset,
