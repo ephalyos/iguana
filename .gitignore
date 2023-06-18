@@ -1,6 +1,15 @@
 
+*.html
+*.ini
 *.ldf
 *.lpf
+*.srf
+*.srm
 *.sty
-src/main/.build_status
-*.html
+*.tcr
+*.xml
+src/.recovery
+src/iguana_tcr.dir/
+src/main/
+src/testbench/
+src/transcript
