@@ -3,9 +3,9 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-package pkg_br is
+package register_file_pkg is
   
-  component br is 
+  component register_file is 
     port(
       clk   : in std_logic;
       we    : in std_logic;                     -- write enabler

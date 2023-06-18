@@ -3,7 +3,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity br is
+entity register_file is
   port(
     clk   : in std_logic;
     we    : in std_logic;                     -- write enabler
@@ -16,7 +16,7 @@ entity br is
   );
 end entity;
 
-architecture behavior of br is
+architecture behavior of register_file is
   
   -- memory definition
   type m256x8 is array(0 to 2**8 - 1) of std_logic_vector(7 downto 0);
@@ -44,7 +44,8 @@ begin
   -- synchronous write
   writing : process (clk)
   begin
-    -- for simulation use the clock = '0' condition 
+    -- Implementation - falling_edge(clk)
+    -- Simulation - clk'event and clk = '0'
     if (falling_edge(clk)) then
       if (we = '1') then
         memory(to_integer(unsigned(wd))) <= din;

@@ -3,8 +3,8 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-use work.pkg_osc.all;
-use work.pkg_br.all;
+use work.oscillator_pkg.all;
+use work.register_file_pkg.all;
 
 entity impl_br is
   port(
@@ -30,7 +30,7 @@ signal tmp_wd  : std_logic_vector(7 downto 0);
 
 begin
   
-  oscillator : osc
+  osc: oscillator
   port map(
     div_factor  => '0',
     out_freq    => tmp_clk
@@ -40,7 +40,7 @@ begin
   tmp_rd2 <= "0000" & rd2;
   tmp_wd  <= "0000" & wd;
   
-  banco_registros : br
+  banco_registros : register_file
   port map(
     clk   => tmp_clk,
     we    => we,

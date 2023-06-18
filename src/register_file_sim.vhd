@@ -3,7 +3,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-use work.pkg_br.all;
+use work.register_file_pkg.all;
 
 entity sim_br is
 end entity;
@@ -21,7 +21,7 @@ signal dout2 : std_logic_vector(7 downto 0);
 
 begin
   
-  banco_registros : br
+  banco_registros : register_file
   port map(
     clk   => clk,
     we    => we,
@@ -41,7 +41,7 @@ begin
     wait for 20 ns;
   end process;
   
-  register_file : process
+  br : process
   begin
     
     we  <= '1'; -- escribir habilitado
