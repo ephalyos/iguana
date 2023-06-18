@@ -1,7 +1,4 @@
 
--- *******************************************************
--- *******************************************************
-
 -- Instance of MACHXO2 Internal Oscillator
 
 -- libraries
@@ -14,7 +11,7 @@ use lattice.all;
 
 -- entity
 
-entity oscillator is
+entity internal_oscillator is
   port(
     osc_freq : out std_logic
   );
@@ -22,7 +19,7 @@ end entity;
 
 -- architecture
 
-architecture behavior of Oscillator is
+architecture behavior of internal_oscillator is
 
 component OSCH is
   generic(
@@ -47,10 +44,6 @@ begin
   );
   
 end architecture;
-
-
--- *******************************************************
--- *******************************************************
 
 -- Frequency Divider
 
@@ -109,9 +102,6 @@ begin
   
 end architecture;
 
--- *******************************************************
--- *******************************************************
-
 -- Oscillator for Implementation
 
 -- libraries
@@ -122,11 +112,11 @@ use ieee.std_logic_1164.all;
 library lattice;
 use lattice.all;
 
-use work.pkg_osc.all;
+use work.oscillator_pkg.all;
 
 -- entity
 
-entity osc is
+entity oscillator is
   port(
     div_factor  : in std_logic;
     out_freq    : inout std_logic
@@ -135,20 +125,20 @@ end entity;
 
 -- architecture
 
-architecture behavior of osc is
+architecture behavior of oscillator is
 
-signal tmp_clk : std_logic;
+signal osc_freq : std_logic;
 
 begin
   
-  osc_instance : oscillator
+  osc_instance : internal_oscillator
   port map(
-    osc_freq => tmp_clk
+    osc_freq => osc_freq
   );
   
   div_instance : freqdiv
   port map(
-    in_freq     => tmp_clk,
+    in_freq     => osc_freq,
     div_factor  => div_factor,
     out_freq    => out_freq
   );

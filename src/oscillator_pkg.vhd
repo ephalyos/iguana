@@ -9,9 +9,9 @@ use lattice.all;
 
 -- package
 
-package pkg_osc is
+package oscillator_pkg is
   
-  component oscillator is
+  component internal_oscillator is
     port(
       osc_freq : out std_logic
     );
@@ -25,7 +25,7 @@ package pkg_osc is
     );
   end component;
   
-  component osc is
+  component oscillator is
     port(
       div_factor  : in std_logic;
       out_freq    : inout std_logic
