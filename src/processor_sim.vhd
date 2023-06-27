@@ -29,10 +29,6 @@ architecture behavior of processor_sim is
   constant op_nand  : std_logic_vector(4 downto 0) := "01010"; -- 10
   constant op_xnor  : std_logic_vector(4 downto 0) := "01011"; -- 11
   
-  constant op_gt : std_logic_vector(4 downto 0) := "01100"; -- 12
-  constant op_eq : std_logic_vector(4 downto 0) := "01101"; -- 13
-  constant op_lt : std_logic_vector(4 downto 0) := "01110"; -- 14
-  
   constant op_jump      : std_logic_vector(4 downto 0) := "10001"; -- 17
   constant op_jump_eq   : std_logic_vector(4 downto 0) := "10010"; -- 18
   constant op_jump_neq  : std_logic_vector(4 downto 0) := "10011"; -- 19
@@ -66,11 +62,11 @@ architecture behavior of processor_sim is
   signal res    : std_logic_vector(7 downto 0);
   signal flag   : std_logic_vector(9 downto 0);
   
-  -- signal md_we  : std_logic;
-  -- signal re     : std_logic;
-  -- signal addr   : std_logic_vector(9 downto 0);
-  -- signal md_din : std_logic_vector(7 downto 0);
-  -- signal dout   : std_logic_vector(7 downto 0);
+  signal md_we  : std_logic := '0';
+  signal re     : std_logic := '1';
+  signal addr   : std_logic_vector(9 downto 0) := "0000000000";
+  signal md_din : std_logic_vector(7 downto 0) := "00000000";
+  signal dout   : std_logic_vector(7 downto 0);
   
   -- TYPES ------------------------------------------------------------
   
@@ -132,15 +128,15 @@ begin
     flag  => flag
   );
   
-  -- MD : data_memory
-  -- port map(
-    -- we    => md_we,
-    -- re    => re,
-    -- addr  => addr,
-    -- din   => md_din,
-    -- clk   => clk,
-    -- dout  => dout
-  -- );
+  MD : data_memory
+  port map(
+    clk   => clk,
+    re    => re,
+    we    => md_we,
+    addr  => addr,
+    din   => md_din,
+    dout  => dout
+  );
   
   -- FIELDS ------------------------------------------------------------
   
@@ -159,17 +155,33 @@ begin
       when op_addition | op_substraction | op_product |
       op_not | op_and | op_or | op_xor | op_nor | op_nand | op_xnor => 
         current <= R_TYPE;
+      
+      when op_jump =>
+        current <= JI_TYPE;
+      
+      when op_jump_eq | op_jump_neq => 
+        current <= JC_TYPE;
+      
+      when op_load =>
+        current <= LW_TYPE;
+      
+      when op_store => 
+        current <= SW_TYPE;
+      
       when nop => 
         current <= NIL;
+      
       when others =>
+      
     end case;
   end process;
   
   -- ACTIONS ------------------------------------------------------------
   
-  process (current, rs, rt, rd, dir, dout1, dout2)
+  process (current, rs, rt, rd, dir, opc, dout1, dout2, res, flag)
   begin
     case current is
+      
       when R_TYPE =>
         -- CP - - - - -
         wpc   <= '1';
@@ -178,7 +190,7 @@ begin
         -- BR - - - - -
         we  <= '1';
         wd  <= rd;
-        din <= rd;
+        din <= res;
         rd1 <= rs;
         rd2 <= rt;
         -- -- ALU - - - - -
@@ -186,8 +198,47 @@ begin
         op1     <= dout1;
         op2     <= dout2;
         -- -- MD - - - - -
-        -- md_we <= '0';
-        -- re    <= '0';
+        re    <= '1';
+        md_we <= '0';
+      
+      when JI_TYPE =>
+        -- CP - - - - -
+        wpc <= '1';
+        sel <= '1';
+        reset <= '0';
+        pc_in <= dir;
+        -- BR - - - - -
+        we  <= '0';
+        -- -- MD - - - - -
+        re    <= '1';
+        md_we <= '0';
+      
+      when JC_TYPE =>
+        -- CP - - - - -
+        wpc <= '1';
+        if ( opc = op_jump_eq ) then
+          sel <= flag(9);
+        elsif ( opc = op_jump_neq) then
+          sel <= not flag(9);
+        end if;
+        reset <= '0';
+        pc_in <= dir;
+        -- BR - - - - -
+        we  <= '0';
+        rd1 <= rs;
+        rd2 <= rt;
+        -- -- ALU - - - - -
+        opcode  <= "01100";
+        op1     <= dout1;
+        op2     <= dout2;
+        -- -- MD - - - - -
+        re    <= '1';
+        md_we <= '0';
+      
+      when LW_TYPE =>
+      
+      when SW_TYPE => 
+      
       when NIL => 
         wpc <= '0';
       when others =>
