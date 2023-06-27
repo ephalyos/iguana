@@ -27,10 +27,6 @@ architecture behavior of instruction_memory is
   constant op_nand  : std_logic_vector(4 downto 0) := "01010"; -- 10
   constant op_xnor  : std_logic_vector(4 downto 0) := "01011"; -- 11
   
-  constant op_gt : std_logic_vector(4 downto 0) := "01100"; -- 12
-  constant op_eq : std_logic_vector(4 downto 0) := "01101"; -- 13
-  constant op_lt : std_logic_vector(4 downto 0) := "01110"; -- 14
-  
   constant op_jump      : std_logic_vector(4 downto 0) := "10001"; -- 17
   constant op_jump_eq   : std_logic_vector(4 downto 0) := "10010"; -- 18
   constant op_jump_neq  : std_logic_vector(4 downto 0) := "10011"; -- 19
@@ -46,11 +42,12 @@ architecture behavior of instruction_memory is
   
   signal memory : m1024x32 := (
     
-    op_addition     & "00001001" & "00000001" & "00001010" & "000", -- BR[10] = 9 + 1
-    op_product      & "00001001" & "00001001" & "00001011" & "000", -- BR[11] = 9 * 9
-    op_substraction & "00001011" & "00000110" & "00001100" & "000", -- BR[12] = 81 - 6
-    op_not          & "00001001" & "00000000" & "00001101" & "000", -- BR[13] = not 9
-    op_addition     & "00001110" & "00001110" & "00001110" & "000",
+    op_addition & "00001001" & "00000001" & "00001010" & "000", -- 0, BR[10] = BR[9] + BR[1]
+    -- op_jump     & "00000000" & "00000000" & '0' & "0000000011", -- 1, goto MP[3]
+    op_jump_eq  & "00000101" & "00000111" & '0' & "0000000011", -- if BR[7] == BR[7] goto MP[3]
+    op_addition & "00001010" & "00000001" & "00001011" & "000", -- 2, BR[11] = BR[10] + BR[1]
+    op_addition & "00001001" & "00001001" & "00001011" & "000", -- 3, BR[11] = BR[9] + BR[9]
+    
     
     nop & "000000000000000000000000000",
     
