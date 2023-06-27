@@ -20,22 +20,30 @@ architecture behavior of data_memory is
   
   signal memory : m1024x8 := (
     
+    "00000000", -- MD[0] = 0
+    
     others => "00000000"
     
   );
   
+  signal re_i : std_logic_vector(7 downto 0);
+  
 begin
   
-  reading : process (re, addr)
-  begin
-    if ( re = '1' ) then
-      dout <= memory(to_integer(unsigned(addr)));
-    end if;
-  end process;
+  re_i <= (others => re);
+  
+  dout <= memory(to_integer(unsigned(addr))) and re_i;
+  
+  -- reading : process (clk, re, addr)
+  -- begin
+    -- if ( re = '1' ) then
+      -- dout <= memory(to_integer(unsigned(addr)));
+    -- end if;
+  -- end process;
   
   writing : process (clk, we, addr, din)
   begin
-    if ( rising_edge(clk) and we = '1' ) then
+    if ( falling_edge(clk) and we = '1' ) then
       memory(to_integer(unsigned(addr))) <= din;
     end if;
   end process;
