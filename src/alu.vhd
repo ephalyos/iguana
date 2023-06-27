@@ -15,12 +15,11 @@ end entity;
 
 architecture behavior of alu is
   
-  -- arithmetic
   constant op_addition      : std_logic_vector(4 downto 0) := "00001"; -- 1
   constant op_substraction  : std_logic_vector(4 downto 0) := "00010"; -- 2
   constant op_product       : std_logic_vector(4 downto 0) := "00011"; -- 3
   constant op_division      : std_logic_vector(4 downto 0) := "00100"; -- 4
-  -- boolean
+  
   constant op_not   : std_logic_vector(4 downto 0) := "00101"; -- 5
   constant op_and   : std_logic_vector(4 downto 0) := "00110"; -- 6
   constant op_or    : std_logic_vector(4 downto 0) := "00111"; -- 7
@@ -28,9 +27,9 @@ architecture behavior of alu is
   constant op_nor   : std_logic_vector(4 downto 0) := "01001"; -- 9
   constant op_nand  : std_logic_vector(4 downto 0) := "01010"; -- 10
   constant op_xnor  : std_logic_vector(4 downto 0) := "01011"; -- 11
-  -- comparison
+  
   constant op_cmp : std_logic_vector(4 downto 0) := "01100"; -- 12
-  -- flags
+  
   constant RES_ERROR  : std_logic_vector(9 downto 0) := "0000000001"; -- flags(0)
   constant RES_ZERO   : std_logic_vector(9 downto 0) := "0000000010"; -- flags(1)
   constant RES_EVEN   : std_logic_vector(9 downto 0) := "0000000100"; -- flags(2)
