@@ -26,21 +26,17 @@ architecture behavior of data_memory is
   
 begin
   
-  process (clk)
+  reading : process (re, addr)
   begin
-    if ( falling_edge(clk) ) then
-      if (re = '1') then
-        dout <= memory(to_integer(unsigned(addr)));
-      end if;
+    if ( re = '1' ) then
+      dout <= memory(to_integer(unsigned(addr)));
     end if;
   end process;
   
-  process (clk)
+  writing : process (clk, we, addr, din)
   begin
-    if ( falling_edge(clk) ) then
-      if (we = '1') then
-        memory(to_integer(unsigned(addr))) <= din;
-      end if;
+    if ( rising_edge(clk) and we = '1' ) then
+      memory(to_integer(unsigned(addr))) <= din;
     end if;
   end process;
   
