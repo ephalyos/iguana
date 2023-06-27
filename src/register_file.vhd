@@ -42,7 +42,7 @@ begin
   dout1 <= memory(to_integer(unsigned(rd1)));
   dout2 <= memory(to_integer(unsigned(rd2)));
   
-  process (clk)
+  process (clk, wd, din)
   begin
     if ( rising_edge(clk) and we = '1' ) then
       memory(to_integer(unsigned(wd))) <= din;
