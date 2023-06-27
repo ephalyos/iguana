@@ -9,34 +9,29 @@ entity program_counter is
     reset   : in std_logic;
     sel     : in std_logic;
     wpc     : in std_logic;
-    pc_in   : in std_logic_vector(7 downto 0);
-    pc_out  : inout std_logic_vector(7 downto 0)
+    pc_in   : in std_logic_vector(9 downto 0);
+    pc_out  : out std_logic_vector(9 downto 0)
   );
 end entity;
 
 architecture behavior of program_counter is
 
-signal pc_next : std_logic_vector(7 downto 0);
+signal pc_curr : std_logic_vector(9 downto 0) := "0000000000";
 
 begin
   
-  pc : process(clk, reset)
+  process (clk)
   begin
     if (reset = '1') then
       pc_out <= (others => '0');
-    -- Simulation - clk'event and clk = '0'
-    -- Implementation - falling_edge(clk)
-    elsif (clk'event and clk = '0') then
-      if (wpc = '1') then 
-        if (sel = '1') then
-          pc_out <= pc_in;
-        else
-          pc_out <= pc_next;
-        end if;
+    elsif ( falling_edge(clk) and wpc = '1' ) then
+      if ( sel = '1' ) then
+        pc_out <= pc_in;
+      else
+        pc_out  <= pc_curr;
+        pc_curr <= std_logic_vector(unsigned(pc_curr) + 1);
       end if;
     end if;
   end process;
-  
-  pc_next <= std_logic_vector(unsigned(pc_out) + 1);
   
 end architecture;
