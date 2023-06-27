@@ -26,7 +26,8 @@ begin
       pc_out <= (others => '0');
     elsif ( falling_edge(clk) and wpc = '1' ) then
       if ( sel = '1' ) then
-        pc_out <= pc_in;
+        pc_out  <= pc_in;
+        pc_curr <= pc_in;
       else
         pc_out  <= pc_curr;
         pc_curr <= std_logic_vector(unsigned(pc_curr) + 1);
