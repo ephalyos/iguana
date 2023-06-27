@@ -152,6 +152,7 @@ begin
   process (opc)
   begin
     case opc is
+      
       when op_addition | op_substraction | op_product |
       op_not | op_and | op_or | op_xor | op_nor | op_nand | op_xnor => 
         current <= R_TYPE;
@@ -178,11 +179,11 @@ begin
   
   -- ACTIONS ------------------------------------------------------------
   
-  process (current, rs, rt, rd, dir, opc, dout1, dout2, res, flag)
+  process (current, rs, rt, rd, dir, opc, dout1, dout2, res, flag, dout)
   begin
     case current is
       
-      when R_TYPE =>
+      when R_TYPE =>          -- TIPO R ------------------------------
         -- CP - - - - -
         wpc   <= '1';
         sel   <= '0';
@@ -201,19 +202,7 @@ begin
         re    <= '1';
         md_we <= '0';
       
-      when JI_TYPE =>
-        -- CP - - - - -
-        wpc <= '1';
-        sel <= '1';
-        reset <= '0';
-        pc_in <= dir;
-        -- BR - - - - -
-        we  <= '0';
-        -- -- MD - - - - -
-        re    <= '1';
-        md_we <= '0';
-      
-      when JC_TYPE =>
+      when JC_TYPE =>         -- TIPO JC ------------------------------
         -- CP - - - - -
         wpc <= '1';
         if ( opc = op_jump_eq ) then
@@ -235,13 +224,51 @@ begin
         re    <= '1';
         md_we <= '0';
       
-      when LW_TYPE =>
+      when JI_TYPE =>         -- TIPO JI ------------------------------  
+        -- CP - - - - -
+        wpc   <= '1';
+        sel   <= '1';
+        reset <= '0';
+        pc_in <= dir;
+        -- BR - - - - -
+        we  <= '0';
+        -- -- MD - - - - -
+        re    <= '1';
+        md_we <= '0';
       
-      when SW_TYPE => 
+      when LW_TYPE =>         -- TIPO CARGA ------------------------------
+        -- CP - - - - -
+        wpc   <= '1';
+        sel   <= '0';
+        reset <= '0';
+        -- BR - - - - -
+        we <= '1';
+        wd <= rs;
+        din <= dout;
+        -- MD - - - - -
+        re    <= '1';
+        md_we <= '0';
+        addr  <= dir;
+      
+      when SW_TYPE =>         -- TIPO ALMACENAMIENTO -------------------------
+        -- CP - - - - -
+        wpc   <= '1';
+        sel   <= '0';
+        reset <= '0';
+        -- BR - - - - -
+        we <= '0';
+        rd1 <= rt;
+        -- MD - - - - -
+        re      <= '0';
+        md_we   <= '1';
+        addr    <= dir;
+        md_din  <= dout1;
       
       when NIL => 
         wpc <= '0';
+      
       when others =>
+      
     end case;
   end process;
   
