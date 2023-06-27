@@ -52,19 +52,19 @@ architecture behavior of processor_sim is
   
   signal instruction  : std_logic_vector(31 downto 0);
   
-  -- signal we     : std_logic;
-  -- signal wd     : std_logic_vector(7 downto 0);
-  -- signal din    : std_logic_vector(7 downto 0);
-  -- signal rd1    : std_logic_vector(7 downto 0);
-  -- signal rd2    : std_logic_vector(7 downto 0);
-  -- signal dout1  : std_logic_vector(7 downto 0);
-  -- signal dout2  : std_logic_vector(7 downto 0);
+  signal we     : std_logic := '0';
+  signal wd     : std_logic_vector(7 downto 0) := "00000000";
+  signal din    : std_logic_vector(7 downto 0) := "00000000";
+  signal rd1    : std_logic_vector(7 downto 0) := "00000001";
+  signal rd2    : std_logic_vector(7 downto 0) := "00000010";
+  signal dout1  : std_logic_vector(7 downto 0);
+  signal dout2  : std_logic_vector(7 downto 0);
   
-  -- signal opcode : std_logic_vector(4 downto 0);
-  -- signal op1    : std_logic_vector(7 downto 0);
-  -- signal op2    : std_logic_vector(7 downto 0);
-  -- signal res    : std_logic_vector(7 downto 0);
-  -- signal flag   : std_logic_vector(9 downto 0);
+  signal opcode : std_logic_vector(4 downto 0) := "00001";
+  signal op1    : std_logic_vector(7 downto 0) := "00000000";
+  signal op2    : std_logic_vector(7 downto 0) := "00000000";
+  signal res    : std_logic_vector(7 downto 0);
+  signal flag   : std_logic_vector(9 downto 0);
   
   -- signal md_we  : std_logic;
   -- signal re     : std_logic;
@@ -79,12 +79,12 @@ architecture behavior of processor_sim is
   
   -- FIELDS ------------------------------------------------------------
   
-  signal opc  : std_logic_vector(4 downto 0);
-  signal rs   : std_logic_vector(7 downto 0);
-  signal rt   : std_logic_vector(7 downto 0);
-  signal rd   : std_logic_vector(7 downto 0);
-  signal ctl  : std_logic_vector(2 downto 0);
-  signal dir  : std_logic_vector(9 downto 0);
+  signal opc  : std_logic_vector(4 downto 0) := "00000";
+  signal rs   : std_logic_vector(7 downto 0) := "00000000";
+  signal rt   : std_logic_vector(7 downto 0) := "00000000";
+  signal rd   : std_logic_vector(7 downto 0) := "00000000";
+  signal ctl  : std_logic_vector(2 downto 0) := "000";
+  signal dir  : std_logic_vector(9 downto 0) := "0000000000";
   
   -- DEBUG
   
@@ -97,11 +97,11 @@ begin
   
   PC : program_counter
   port map(
-		wpc 		=> wpc,
-    sel     => sel,
-    reset   => reset,
-    pc_in   => pc_in,
     clk     => clk,
+		wpc 		=> wpc,
+    reset   => reset,
+    sel     => sel,
+    pc_in   => pc_in,
     pc_out  => pc_out
   );
   
@@ -111,26 +111,26 @@ begin
     instruction => instruction
   );
   
-  -- BR : register_file
-  -- port map(
-    -- we    => we,
-    -- wd    => wd,
-    -- din   => din,
-    -- rd1   => rd1,
-    -- rd2   => rd2,
-    -- clk   => clk,
-    -- dout1 => dout1,
-    -- dout2 => dout2
-  -- );
+  BR : register_file
+  port map(
+    clk   => clk,
+    we    => we,
+    wd    => wd,
+    din   => din,
+    rd1   => rd1,
+    rd2   => rd2,
+    dout1 => dout1,
+    dout2 => dout2
+  );
   
-  -- ALU1 : alu
-  -- port map(
-    -- code  => opcode,
-    -- op1   => op1,
-    -- op2   => op2,
-    -- res   => res,
-    -- flag  => flag
-  -- );
+  ALU1 : alu
+  port map(
+    code  => opcode,
+    op1   => op1,
+    op2   => op2,
+    res   => res,
+    flag  => flag
+  );
   
   -- MD : data_memory
   -- port map(
@@ -145,58 +145,52 @@ begin
   -- FIELDS ------------------------------------------------------------
   
   opc <= instruction(31 downto 27);
+  rs  <= instruction(26 downto 19);
+  rt  <= instruction(18 downto 11);
+  rd  <= instruction(10 downto 3);
+  ctl <= instruction(2 downto 0);
+  dir <= instruction(9 downto 0);
   
   -- TRANSITIONS ------------------------------------------------------------
   
   process (opc)
   begin
     case opc is
-      
       when op_addition | op_substraction | op_product |
       op_not | op_and | op_or | op_xor | op_nor | op_nand | op_xnor => 
         current <= R_TYPE;
-        rs  <= instruction(26 downto 19);
-        rt  <= instruction(18 downto 11);
-        rd  <= instruction(10 downto 3);
-        ctl <= instruction(2 downto 0);
-        dir <= "0000000000";
-      
       when nop => 
         current <= NIL;
-        wpc <= '0';
-      
       when others =>
-      
     end case;
   end process;
   
   -- ACTIONS ------------------------------------------------------------
   
-  process (current)
+  process (current, rs, rt, rd, dir, dout1, dout2)
   begin
     case current is
-      
       when R_TYPE =>
         -- CP - - - - -
         wpc   <= '1';
         sel   <= '0';
         reset <= '0';
         -- BR - - - - -
-        -- we  <= '1';
-        -- wd  <= rd;
-        -- din <= res;
-        -- rd1 <= rs;
-        -- rd2 <= rt;
+        we  <= '1';
+        wd  <= rd;
+        din <= rd;
+        rd1 <= rs;
+        rd2 <= rt;
         -- -- ALU - - - - -
-        -- opcode  <= opc;
-        -- op1     <= dout1;
-        -- op2     <= dout2;
+        opcode  <= opc;
+        op1     <= dout1;
+        op2     <= dout2;
         -- -- MD - - - - -
         -- md_we <= '0';
         -- re    <= '0';
-      
+      when NIL => 
+        wpc <= '0';
       when others =>
-      
     end case;
   end process;
   
