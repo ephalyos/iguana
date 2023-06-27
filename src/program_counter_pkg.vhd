@@ -12,8 +12,8 @@ package program_counter_pkg is
       reset         : in std_logic;
       sel           : in std_logic;
 			wpc           : in std_logic;
-      pc_in         : in std_logic_vector(7 downto 0);
-      pc_out        : inout std_logic_vector(7 downto 0)
+      pc_in         : in std_logic_vector(9 downto 0);
+      pc_out        : out std_logic_vector(9 downto 0)
     );
   end component;
   
