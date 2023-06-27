@@ -22,16 +22,16 @@ architecture behavior of register_file is
   
   signal memory : m256x8 := (
     
-    "00000000", -- 0
-    "00000001", -- 1
-    "00000010", -- 2
-    "00000011", -- 3
-    "00000100", -- 4
-    "00000101", -- 5
-    "00000110", -- 6
-    "00000111", -- 7
-    "00001000", -- 8
-    "00001001", -- 9
+    "00000000", -- BR[0] = 0
+    "00000001", -- BR[1] = 1
+    "00000010", -- BR[2] = 2
+    "00000011", -- BR[3] = 3
+    "00000100", -- BR[4] = 4
+    "00000101", -- BR[5] = 5
+    "00000110", -- BR[6] = 6
+    "00000111", -- BR[7] = 7
+    "00001000", -- BR[8] = 8
+    "00001001", -- BR[9] = 9
     
     others => "00000000"
     
@@ -44,7 +44,7 @@ begin
   
   process (clk, wd, din)
   begin
-    if ( rising_edge(clk) and we = '1' ) then
+    if ( falling_edge(clk) and we = '1' ) then
       memory(to_integer(unsigned(wd))) <= din;
     end if;
   end process;
