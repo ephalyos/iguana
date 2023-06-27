@@ -44,10 +44,8 @@ begin
   
   process (clk)
   begin
-    if ( rising_edge(clk) ) then
-      if (we = '1') then
-        memory(to_integer(unsigned(wd))) <= din;
-      end if;
+    if ( rising_edge(clk) and we = '1' ) then
+      memory(to_integer(unsigned(wd))) <= din;
     end if;
   end process;
   
