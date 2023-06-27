@@ -6,9 +6,9 @@ use ieee.numeric_std.all;
 entity program_counter is
   port(
     clk     : in std_logic;
+    wpc     : in std_logic;
     reset   : in std_logic;
     sel     : in std_logic;
-    wpc     : in std_logic;
     pc_in   : in std_logic_vector(9 downto 0);
     pc_out  : out std_logic_vector(9 downto 0)
   );
